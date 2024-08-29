@@ -177,7 +177,7 @@ abstract class AbstractJava implements \IteratorAggregate, \ArrayAccess, JavaTyp
      *
      * @return ObjectIterator
      */
-    public function getIterator(...$args)
+    public function getIterator(...$args): \Traversable
     {
         if (!isset($this->__delegate)) {
             $this->__createDelegate();
@@ -219,7 +219,7 @@ abstract class AbstractJava implements \IteratorAggregate, \ArrayAccess, JavaTyp
      *
      * @return mixed
      */
-    public function offsetGet($idx, ...$args)
+    public function offsetGet($idx, ...$args): mixed
     {
         if (!isset($this->__delegate)) {
             $this->__createDelegate();
@@ -239,18 +239,18 @@ abstract class AbstractJava implements \IteratorAggregate, \ArrayAccess, JavaTyp
      *
      * @return mixed
      */
-    public function offsetSet($idx, $val, ...$args)
+    public function offsetSet($idx, $val, ...$args): void
     {
         if (!isset($this->__delegate)) {
             $this->__createDelegate();
         }
         if (empty($args)) {
-            return $this->__delegate->offsetSet($idx, $val);
+            $this->__delegate->offsetSet($idx, $val);
+            return;
         }
 
         array_unshift($args, $idx, $val);
-
-        return $this->__call('offsetSet', $args);
+        $this->__call('offsetSet', $args);
     }
 
     /**
@@ -259,17 +259,18 @@ abstract class AbstractJava implements \IteratorAggregate, \ArrayAccess, JavaTyp
      *
      * @return mixed|void
      */
-    public function offsetUnset($idx, ...$args)
+    public function offsetUnset($idx, ...$args): void
     {
         if (!isset($this->__delegate)) {
             $this->__createDelegate();
         }
         if (empty($args)) {
-            return $this->__delegate->offsetUnset($idx);
+            $this->__delegate->offsetUnset($idx);
+            return;
         }
         array_unshift($args, $idx);
 
-        return $this->__call('offsetUnset', $args);
+        $this->__call('offsetUnset', $args);
     }
 
     /**
